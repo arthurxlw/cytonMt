@@ -12,6 +12,8 @@ To start using the toolkit
 
 1) compiling the toolkit;
 
+requirement: cuda, cudnn (>= 7.0)
+
 make -j8;
 
 2) training a model;
