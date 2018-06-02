@@ -52,20 +52,20 @@ More examples:
 
 If you are using our toolkit, please kindly cite our paper:
 
-  @article{wang2018cytonmt,
-    title={CytonMT: an Efficient Neural Machine Translation Open-source Toolkit Implemented in C++},
-    author={Wang, Xiaolin and Utiyama, Masao and Sumita, Eiichiro},
-    journal={arXiv preprint arXiv:1802.07170},
-    year={2018}
-  }
+    @article{wang2018cytonmt,
+      title={CytonMT: an Efficient Neural Machine Translation Open-source Toolkit Implemented in C++},
+      author={Wang, Xiaolin and Utiyama, Masao and Sumita, Eiichiro},
+      journal={arXiv preprint arXiv:1802.07170},
+      year={2018}
+    }
 
 
 ================================================
 
 The parameters of CytonMT
 
-$bin/cytonMt --help
-version: 2018-0528
+bin/cytonMt --help
+  version: 2018-0528
   --help	 ()
   --mode	train/translate ()
   --saveModel	 ()
