@@ -65,7 +65,7 @@ If you are using our toolkit, please kindly cite our paper:
 The parameters of CytonMT
 
 bin/cytonMt --help
-  version: 2018-0528
+			version: 2018-0528
   --help	 ()
   --mode	train/translate ()
   --saveModel	 ()
