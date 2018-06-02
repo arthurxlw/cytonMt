@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ public:
 	Variable* hy;
 	Variable* cy;
 
-	Variable* init(Variable* x, int maxSeqLen, int batchSize, int numLayers, int hiddenSize);
+	Variable* init(Variable* x, int maxSeqLen, int batchSize, int numLayers,
+			int embedSize, int hiddenSize);
 };
 
 } /* namespace cytonLib */

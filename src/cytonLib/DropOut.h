@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,28 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef _CYTONMT_EMBEDDINGLAYER_H_
-#define _CYTONMT_EMBEDDINGLAYER_H_
+#ifndef DROPOUT_H_
+#define DROPOUT_H_
 
-#include "EmbeddingInstance.h"
+#include "Global.h"
+#include "Variable.h"
+#include "Layer.h"
 
 namespace cytonLib
 {
 
-class EmbeddingLayer: public EmbeddingInstance
+class DropOut: public Layer
+//note: The implement of dropout in cudnn seems has a bug.
+//      I have encountered memory errors from CuDropoutLayer for a few times.
+//      Therefore, using this implement is safer.
 {
 public:
-	EmbeddingCell embeddingCell;
+	Precision dropout;
+	bool localTestMode;
 
-public:
-	Variable* init(string tag, DevMatInt* x, HostMatInt* hx,
-			int vocabSize, int hiddenSize);
+	DevMatPrec mask;
+	bool active;
 
-	Variable* init(string tag, DevMatInt* x, HostMatInt* hx,
-			int vocabSize, int hiddenSize, Precision* y_, Precision* dy_, int stride);
+	Variable* init(string tag_, Variable* x, Precision dropout);
 
+	void forward();
+
+	void backward();
 };
 
 } /* namespace cytonLib */
 
-#endif /* EMBEDDINGLAYER_H_ */
+#endif /* DROPOUT_H_ */

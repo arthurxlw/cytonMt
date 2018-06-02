@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,11 +43,22 @@ void WeightFactory::init(const string& method)
 
 }
 
-void WeightFactory::create(Weight& weight, string tag, int ni, int nj)
+void WeightFactory::create(Weight& weight, string tag, int ni, int nj, Weight* share)
 {
-	weight.create(tag, ni, nj);
-	weights.push_back(&weight);
+	if(share==NULL)
+	{
+		weight.create(tag, ni, nj);
+		weights.push_back(&weight);
+	}
+	else
+	{
+		assert(share->ni==ni && share->nj==nj);
+		weight.tag=tag;
+		weight.set(ni, share->stride, nj, share->data, share->grad.data);
+		shareWeights.push_back(std::make_pair(share, &weight));
+	}
 }
+
 
 void WeightFactory::alloc(Precision clipGradient)
 {
@@ -69,9 +80,18 @@ void WeightFactory::alloc(Precision clipGradient)
 		w.set(w.ni, w.ni, w.nj, whole.data+offset, whole.grad.data+offset);
 		offset+=w.length();
 	}
-
-
+	
 	whole.initRandom(-global.initFactor, global.initFactor);
+
+	for(int i=0;i<shareWeights.size(); i++)
+	{
+		std::pair<Weight*, Weight*> u=shareWeights.at(i);
+		Weight& o=*u.first;
+		Weight& w=*u.second;
+		w.set(o.ni, o.stride, o.nj, o.data, o.grad.data);
+		XLLib::printfln(global.os, "shareWeight%d  %s <- %s  %d*%d", i, w.tag.c_str(), o.tag.c_str(), w.ni, w.nj);
+	}
+
 	if(optAdam)
 	{
 		momentum.resize(whole.ni, whole.nj);

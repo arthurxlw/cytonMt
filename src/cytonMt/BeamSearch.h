@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class BeamSearch
 public:
 	void init(cytonMt::NetworkMt* model_, cytonMt::Vocabulary *vocab_,
 			int beamSize_, int maxSeqLen_, Precision lenPenalty,
-			vector<int>& hiddenSize, int numLayers);
+			int embedSize, vector<int>& hiddenSize, int numLayers);
 
 	string apply(vector<string>& trans, Precision* score=NULL);
 

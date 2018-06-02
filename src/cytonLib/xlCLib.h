@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ static std::string dirCwd()
 	    return "ERROR";
 	}
 
-static void fileLink(std::string src, std::string des)
+static int fileLink(std::string src, std::string des)
 	{
 		if(XLLib::fileExists(des))
 		{
@@ -173,7 +173,8 @@ static void fileLink(std::string src, std::string des)
 //				cwd.c_str(), des.c_str());
 
 		std::string cmd=XLLib::stringFormat("ln -s %s %s", src.c_str(), des.c_str());
-		system(cmd.c_str());
+		int res=system(cmd.c_str());
+		return res;
 	}
 
 	static int fileRemove(std::string src)
@@ -611,12 +612,14 @@ static void printfln(bool outputStd,std::ostream * os, const std::string & fmt, 
 	}
 
 
-	static void dirMake(const std::string& wd) {
+	static int dirMake(const std::string& wd) {
+		int res=0;
 		if (!dirExists(wd)) {
 			std::string cmd = stringFormat("mkdir -p %s", wd.c_str());
 			//			println(cmd);
-			system(cmd.c_str());
+			res=system(cmd.c_str());
 		}
+		return res;
 	}
 
 	static std::string dirName(const std::string& path){

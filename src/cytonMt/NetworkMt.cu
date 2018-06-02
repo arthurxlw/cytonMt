@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,14 +28,17 @@ void NetworkMt::init()
 	decodings.preInit(params.maxSeqLen, params.mode);
 
 	Variable* tx=embeddingSrc.init("sourceEmbedding", &batch.srcMat, &batch.hSrcMat,
-			params.srcVocabSize, params.hiddenSize.at(0));
+			params.srcVocabSize, params.embedSize);
 	layers.push_back(&embeddingSrc);
 
-	tx=encoder.init( tx, params.maxSeqLen, batchSize, params.numLayers, params.hiddenSize.at(0));
+	tx=encoder.init( tx, params.maxSeqLen, batchSize, params.numLayers,
+			params.embedSize, params.hiddenSize.at(0));
 	layers.push_back(&encoder);
 
+	Weight* tw=params.srcTrgShareEmbed?&embeddingSrc.cell->w:NULL;
 	decodings.init( tx, encoder.hy, encoder.cy, &batch.trgMat, &batch.hTrgMat,
-			params.trgVocabSize, params.hiddenSize.at(0), params.numLayers, &trgVocab);
+			params.trgVocabSize, params.embedSize, params.hiddenSize.at(0), params.numLayers,
+			&trgVocab, tw);
 	layers.push_back(&decodings);
 	weightFactory.alloc(params.clipGradient);
 }
@@ -46,7 +49,6 @@ void NetworkMt::backward()
 	encoder.backward();
 	embeddingSrc.backward();
 }
-
 
 Precision NetworkMt::train(Precision lambda, bool updateParams)
 {
@@ -64,7 +66,7 @@ Precision NetworkMt::train(Precision lambda, bool updateParams)
 
 	if(updateParams)
 	{
-		weightFactory.update(lambda);
+		weightFactory.update(lambda*batch.factor);
 	}
 
 	nBatches+=1;

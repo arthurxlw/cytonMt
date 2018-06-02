@@ -14,33 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef _CYTONMT_WEIGHTEDHS_H_
-#define _CYTONMT_WEIGHTEDHS_H_
+#ifndef _CYTONMT_EMBEDDINGLAYER_H_
+#define _CYTONMT_EMBEDDINGLAYER_H_
 
-#include "Variable.h"
-#include "utils.h"
-#include "BilingBatch.h"
-#include "Layer.h"
+#include "EmbeddingInstance.h"
 
-using namespace cytonLib;
-
-namespace cytonMt
+namespace cytonLib
 {
 
-class WeightedHs: public Layer
+class EmbeddingLayer: public EmbeddingInstance
 {
 public:
-	Variable* x;
-	Variable* wx;
-	Variable y;
+	EmbeddingCell embeddingCell;
 
-	Variable* init(string tag_, Variable* x_, Variable* wx_);
+public:
+	Variable* init(string tag, DevMatInt* x, HostMatInt* hx,
+			int vocabSize, int hiddenSize, Weight* w=NULL);
 
-	void forward();
+	Variable* init(string tag, DevMatInt* x, HostMatInt* hx,
+			int vocabSize, int hiddenSize, Precision* y_, Precision* dy_, int stride);
 
-	void backward();
 };
 
 } /* namespace cytonLib */
 
-#endif /* WEIGHTEDHS_H_ */
+#endif /* EMBEDDINGLAYER_H_ */

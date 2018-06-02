@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ limitations under the License.
 #include <fstream>
 #include <math_constants.h>
 #include "xlCLib.h"
-#include <cuda.h>
-#include <cudnn.h>
-#include <cuda_runtime.h>
-#include <cublas_v2.h>
-#include <cusolverDn.h>
-#include <thrust/device_vector.h>
-#include <thrust/extrema.h>
-#include <curand.h>
-#include <device_launch_parameters.h>
+#include "cuda.h"
+#include "cudnn.h"
+#include "cuda_runtime.h"
+#include "cublas_v2.h"
+#include "cusolverDn.h"
+#include "thrust/device_vector.h"
+#include "thrust/extrema.h"
+#include "curand.h"
+#include "device_launch_parameters.h"
 
 
 #ifndef checkError
@@ -64,7 +64,9 @@ using std::ostream;
 using std::istream;
 
 extern cudnnDataType_t cudnnDataType;
+
 typedef float Precision;
+
 
 cudaError_t checkError_(cudaError_t stat, const char *file, int line);
 cudnnStatus_t checkError_(cudnnStatus_t stat, const char *file, int line);

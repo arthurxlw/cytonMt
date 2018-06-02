@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef _CYTONLIB_LINEARLAYER_H_
-#define _CYTONLIB_LINEARLAYER_H_
+#ifndef LINEARLAYER_H_
+#define LINEARLAYER_H_
 
 #include "Layer.h"
 #include "Weight.h"
@@ -28,6 +28,7 @@ namespace cytonLib
 class LinearLayer: public Layer
 {
 public:
+	int mode;
 	int dimInput;
 	int dimOutput;
 
@@ -35,19 +36,24 @@ public:
 	Weight b;
 	bool biased;
 
-	Variable* init(string tag_, Variable* x_, int dimOutput_, bool biased_=true, WeightFactory* weightFactory_=NULL);
+	Variable* init(const string& tag_, Variable* x_, int dimOutput_,
+			bool biased_=true, int mode_=1, WeightFactory* weightFactory_=NULL,
+			Weight* weight_=NULL);
 
-	Variable* init(string tag_, LinearLayer* base, Variable* x_);
+	Variable* init(const string& tag_, LinearLayer* base, Variable* x_);
 
 	void forward();
+
+	void increase();
 
 	void backward();
 
 	void calculateGradient();
 
-protected:
 
+protected:
 	LinearLayer* base;
+	int num;
 };
 
 

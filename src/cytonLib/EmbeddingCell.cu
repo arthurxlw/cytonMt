@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ limitations under the License.
 
 namespace cytonLib {
 
-void EmbeddingCell::init(string tag, int vocabSize, int hiddenSize)
+void EmbeddingCell::init(string tag, int vocabSize, int hiddenSize, Weight* w0)
 {
 	this->hiddenSize=hiddenSize;
 	this->vocabSize=vocabSize;
 
-	weightFactory.create(w, tag, hiddenSize, vocabSize);
+	weightFactory.create(w, tag, hiddenSize, vocabSize, w0);
 }
 
 

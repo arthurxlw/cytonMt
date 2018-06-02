@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ void Decoding::init(int index, DecodingCell& cell, Variable* embeddingY, Variabl
 {
 	this->index=index;
 	this->embeddingY=embeddingY;
+	int embedSize=embeddingY->c;
 
 	string tag=XLLib::stringFormat("decoding%d", index);
 
@@ -49,7 +50,7 @@ void Decoding::init(int index, DecodingCell& cell, Variable* embeddingY, Variabl
 	else
 	{
 		ho=new Variable();
-		ho->resize(batchSize, hiddenSize, 1, 1);
+		ho->resize(batchSize, embedSize, 1, 1);
 		ho->setZero();
 		ho->frozen=true;
 	}
@@ -80,7 +81,6 @@ void Decoding::init(int index, DecodingCell& cell, Variable* embeddingY, Variabl
 		XLLib::printfln(global.os,"decoding.dropHo=%f", tDropout);
 	}
 	tx=dropHo.init(tag+".dropOut", tx, tDropout);
-	tx->frozen=true;
 	layers.push_back(&dropHo);
 
 	tx=dupHo.init(tag+".duplicator", tx);

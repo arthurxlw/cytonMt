@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,17 +50,16 @@ int MonolingReader::read_mini_batch(int batchSize, bool ignoreUnk, HostMatInt& m
 	for(int i=0;i<batchSize;i++)
 	{
 		string line;
-		bool read=true;
 		if(fileName!="stdin")
 		{
-			read=std::getline(file, line, '\n');
+			std::getline(file, line, '\n');
 		}
 		else
 		{
-			read=std::getline(std::cin, line, '\n');
+			std::getline(std::cin, line, '\n');
 		}
 
-		if(read && !line.empty())
+		if(!line.empty())
 		{
 			vocab->parse(line, sent, ignoreUnk);
 			sents.push_back(sent);
@@ -68,10 +67,11 @@ int MonolingReader::read_mini_batch(int batchSize, bool ignoreUnk, HostMatInt& m
 
 			*raw += line+"\n";
 		}
-		if(!read)
+		else
 		{
 			break;
 		}
+
 	}
 
 	if(!sents.empty())

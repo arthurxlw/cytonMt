@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,7 +70,8 @@ public:
 
 	void init(Variable* hsSeq, Variable* hEncoder, Variable* cEncoder,
 			DevMatInt* wordsTrg, HostMatInt* hWordsTrg,
-			int vocabSize, int hiddenSize, int numLayers_, Vocabulary* vocab);
+			int vocabSize, int embedSize, int hiddenSize, int numLayers_,
+			Vocabulary* vocab, Weight* embedW);
 
 	void forward();
 

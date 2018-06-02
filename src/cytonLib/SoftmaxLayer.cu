@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,11 +69,7 @@ void softmax_backwardSparse_kernel(int* targets, Precision* y, Precision* dx, Pr
 			if( i == target){
 				tDx=1-*tY;
 				Precision tLog;
-#ifdef PREICISION_DOUBLE
-				tLog=log(*tY);
-#else
 				tLog=logf(*tY+1.0e-20);
-#endif
 				likehood[j]=tLog;
 			}
 			else
@@ -136,11 +132,7 @@ void softmax_backwardSmooth_kernel(int* targets, Precision* y, Precision* dy, Pr
 			if( i == target){
 				tDy *= epsilon1;
 				Precision tLog;
-#ifdef PREICISION_DOUBLE
-				tLog=log(*tY);
-#else
 				tLog=logf(*tY+1.0e-20);
-#endif
 				likehood[j]=tLog;
 			}
 			else

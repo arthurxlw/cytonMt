@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ limitations under the License.
 #include "Concatenate.h"
 #include "LstmInstance.h"
 #include "SoftmaxLayer.h"
-#include "CuDropoutLayer.h"
+#include "DropOut.h"
 #include "Variable.h"
 #include "DecodingCell.h"
 #include "ModelState.h"
@@ -51,7 +51,8 @@ public:
 
 	Attention attention;
 
-	CuDropoutLayer dropHo;
+//	DropoutLayer dropHo;
+	DropOut dropHo;
 	DuplicateLayer dupHo;
 	LinearLayer linearHo;
 

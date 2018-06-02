@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ limitations under the License.
 
 namespace cytonLib
 {
-
-cudnnDataType_t cudnnDataType=CUDNN_DATA_FLOAT;
+cudnnDataType_t cudnnDataType =CUDNN_DATA_FLOAT;
 
 // Define some error checking macros.
 cudaError_t checkError_(cudaError_t stat, const char *file, int line)

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@ limitations under the License.
 namespace cytonMt
 {
 
-Variable* Encoder::init(Variable* x, int maxSeqLen, int batchSize, int numLayers, int hiddenSize)
+Variable* Encoder::init(Variable* x, int maxSeqLen, int batchSize, int numLayers,
+		int embedSize, int hiddenSize)
 {
 	if(hiddenSize%2!=0)
 	{

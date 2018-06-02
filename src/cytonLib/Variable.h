@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -65,6 +65,8 @@ public:
 	void setWithStrideH(int n_, int c_, int h_, int stride_, Precision* data, Precision *grad);
 
 	string toStringDim();
+
+	string toString();
 };
 
 } /* namespace cytonVR */

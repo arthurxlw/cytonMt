@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ void Network::backward()
 {
 	for(int k=layers.size()-1; k>=0; k--)
 	{
-//		if(debug)XLLib::printfln("\n# batch %d network.backward %d\n", global.batch, k);
 		Layer* layer=layers.at(k);
 		layer->backward();
 	}

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public:
 	string testOutput;
 	string srcVocab;
 	string trgVocab;
+	bool srcTrgShareEmbed;
 	int srcVocabSize;
 	int trgVocabSize;
 	bool ignoreUnk;
@@ -55,6 +56,7 @@ public:
 	int epochs;
 	int epochStart;
 	vector<int> hiddenSize;
+	int embedSize;
 	int maxSeqLen;
 	int numLayers;
 	Precision dropout;

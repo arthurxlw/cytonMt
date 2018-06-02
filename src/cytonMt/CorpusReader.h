@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,9 +51,9 @@ public:
 
 	void init(const string& srcFile, const string& trgFile,
 			Vocabulary& srcVocab, Vocabulary&trgVocab, bool ignoreUnk,
-			int batchSize, int maxLen);
+			int batchSize, int maxLen, double factor=1.0);
 
-	void submit(vector<vector<int> >& srcSents, vector<vector<int> >& trgSents);
+	void submit(vector<vector<int> >& srcSents, vector<vector<int> >& trgSents, double factor);
 
 	void reset();
 

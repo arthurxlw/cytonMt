@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,11 +27,12 @@ ParamsMt::ParamsMt()
 			{"saveModel", "", ""},
 			{"loadModel", "", "load model for continue training or translate"},
 			{"maxSaveModels", "10","maximum number of saved models"},
-			{"train", "trainSrc:trainTrg", "source-side and target-side training files, one sentences per line"},
+			{"train", "trainSrc:trainTrg", "source-side and target-side training files, one sentences per line. trainSrc:trainTrg[:weight:trainSrc2:trainSrc2:weight2]"},
 			{"dev",  "devSrc:devTrg",	"source-side and target-side development files, one sentences per line"},
 			{"testInput", "testInput", "input file for translating"},
 			{"testOutput", "testOutput", "output file for translating"},
 			{"vocab",  "vocabSrc:vocabTrg",	"source-side and target-side vocabulary files, one word per line"},
+			{"srcTrgShareEmbed", "1","share the embedding weight between the source side and the target side"},
 			{"srcVocabSize",  "0",	"size of source-side vocabulary, 0 means using whole vocabulary in vocabSrc file"},
 			{"trgVocabSize",  "0",	"size of source-side vocabulary, 0 means using whole vocabulary in vocabTrg file"},
 			{"ignoreUnk",  "1",	"0/1, 1 means ignoring unknown words"},
@@ -48,7 +49,8 @@ ParamsMt::ParamsMt()
 			{"epochStart", "1", "the number of first epoch, useful for continue training"},
 			{"batchSize",  "64",	"batch size"},
 			{"maxSeqLen",  "100",	"max length of source and target sentence"},
-			{"hiddenSize",  "512",	"size of word embedding and hidden states"},
+			{"embedSize",  "512",	"size of word embedding"},
+			{"hiddenSize",  "512",	"size of hidden states"},
 			{"numLayers",  "2",	"number of encoder/decoder layers"},
 			{"dropout",  "0.2",	"dropout rate, 0 means disabling dropout"},
 			{"clipGradient",  "5",	"threshold for clip gradient"},
@@ -67,7 +69,7 @@ ParamsMt::ParamsMt()
 
 void ParamsMt::init_members()
 {
-	mode=opt2val["--mode"];
+	mode=get("mode");
 	saveModel=get("saveModel");
 	if(!saveModel.empty())
 	{
@@ -81,15 +83,24 @@ void ParamsMt::init_members()
 	testOutput=get("testOutput");
 	vector<string> ts;
 	XLLib::str2list(get("vocab"),":", ts);
+	srcTrgShareEmbed=geti("srcTrgShareEmbed");
 	if(!ts.empty())
 	{
-		if(ts.size()!=2)
+		if(ts.size()==2)
+		{
+			srcVocab=ts.at(0);
+			trgVocab=ts.at(1);
+		}
+		else if(ts.size()==1 && srcTrgShareEmbed)
+		{
+			srcVocab=ts.at(0);
+			trgVocab=ts.at(0);
+		}
+		else
 		{
 			XLLib::printfln("the parameter of vocab is wrong: %s", get("vocab"));
 			exit(1);
 		}
-		srcVocab=ts.at(0);
-		trgVocab=ts.at(1);
 	}
 	srcVocabSize=geti("srcVocabSize");
 	trgVocabSize=geti("trgVocabSize");
@@ -107,6 +118,7 @@ void ParamsMt::init_members()
 	epochStart=geti("epochStart");
 	cytonLib::batchSize=geti("batchSize");
 	maxSeqLen=geti("maxSeqLen");
+	embedSize=geti("embedSize");
 	XLLib::str2ints(get("hiddenSize"), ":", hiddenSize);
 	numLayers=geti("numLayers");
 	dropout=getf("dropout");
@@ -135,9 +147,11 @@ void ParamsMt::saveModelParams(std::string fileName)
 {
 	std::ofstream f(fileName.c_str());
 	f<<numLayers<<"\n";
+	f<<embedSize<<"\n";
 	f<<XLLib::toString_vec_ostream(hiddenSize,":")<<"\n";
 	f<<srcVocabSize<<"\n";
 	f<<trgVocabSize<<"\n";
+	f<< (srcTrgShareEmbed?"1":"0") <<"\n";
 	f<<cytonLib::batchSize<<"\n";
 	f<<maxSeqLen<<"\n";
 	f.close();
@@ -148,6 +162,7 @@ void ParamsMt::loadModelParams(std::string fileName)
 	std::ifstream f(fileName.c_str());
 	string t;
 	f>>numLayers;
+	f>>embedSize;
 
 	getline(f, t);
 	if(t.empty())
@@ -157,17 +172,27 @@ void ParamsMt::loadModelParams(std::string fileName)
 	hiddenSize.clear();
 	XLLib::str2ints(t, ":", hiddenSize);
 
-	getline(f, t);
-	srcVocabSize=atoi(t.c_str());
+	f>>srcVocabSize;
+	f>>trgVocabSize;
 
-	getline(f, t);
-	trgVocabSize=atoi(t.c_str());
+	int td;
+	f>>td;
+	srcTrgShareEmbed=td;
+
 
 	f>>cytonLib::batchSize;
 
 	int tn;
 	f>>tn;
 	maxSeqLen=std::max(maxSeqLen, tn);
+
+	XLLib::printfln(os, "  numLayers %d", numLayers);
+	XLLib::printfln(os, "  embedSize %d", embedSize);
+	XLLib::printfln(os, "  hiddenSize %s", XLLib::toString_vec_ostream(hiddenSize,":").c_str());
+	XLLib::printfln(os, "  srcVocabSize %d", srcVocabSize);
+	XLLib::printfln(os, "  trgVocabSize %d", trgVocabSize);
+	XLLib::printfln(os, "  srcTrgShareEmbed %d", srcTrgShareEmbed);
+	XLLib::printfln(os, "  maxSeqLen %d", maxSeqLen);
 
 	f.close();
 }

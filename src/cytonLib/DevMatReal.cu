@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -77,6 +77,14 @@ void DevMatReal<T>::initRandom(T low, T up)
 	initRandom_kernel<<<ceil(n, blockSize), blockSize>>>(this->data, n, a, b);
 	checkError(cudaGetLastError());
 }
+
+template<typename T>
+void DevMatReal<T>::initRandomCurand()
+{
+	size_t len=this->length();
+  checkError(curandGenerateUniformX(global.curandGenerator, this->data, len));
+}
+
 
 template<typename T>
 void DevMatReal<T>::add(T* mat, T alpha)
@@ -190,7 +198,7 @@ void devMatReal_reduceCols_min(
 }
 
 template<typename T>
-T DeviceMatrix<T>::min() const
+T DevMatReal<T>::min() const
 {
 	HostMatReal<T> mat;
 
@@ -205,6 +213,29 @@ T DeviceMatrix<T>::min() const
 		mat.copyFrom(*this);
 	}
 	return mat.min();
+}
+
+template<typename T>
+string DevMatReal<T>::toString()
+{
+	int ni=this->ni;
+	int nj=this->nj;
+	vector<T> v(ni*nj);
+	checkError(cudaMemcpy(&v[0], this->data,sizeof(T)*ni*nj,cudaMemcpyDefault));
+
+	ostringstream os;
+	os<<" (" <<ni<<"*"<<nj<<")\n";
+	int k=0;
+	for(int j=0; j<nj; j++)
+	{
+		for(int i=0; i<ni; i++)
+		{
+			os<< XLLib::stringFormat("%7.4f ", v.at(k));
+			k+=1;
+		}
+		os<<"\n";
+	}
+	return os.str();
 }
 
 template class DevMatReal<double>;

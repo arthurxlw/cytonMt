@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ limitations under the License.
 
 namespace cytonLib {
 
-void ModelState::init(int hiddenSize, int numLayers)
+void ModelState::init(int embedSize, int hiddenSize, int numLayers)
 	{
-		input.resize(hiddenSize, 1);
+		input.resize(embedSize, 1);
 		hx.resize(hiddenSize, numLayers);
 		cx.resize(hiddenSize, numLayers);
 	}

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public:
 
 	void initRandom(T low, T up);
 
+	void initRandomCurand();
+
 	void add(T* mat, T alpha=1.0);
 
 	void addTo(T* mat, T alpha=1.0);
@@ -59,6 +61,8 @@ public:
 	T getNorm();
 
 	T clip(T threshold);
+
+	string toString();
 };
 
 

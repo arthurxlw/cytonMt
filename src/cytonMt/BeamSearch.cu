@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ Precision fGlobalScore(Precision score, int length, Precision lenPenalty)
 
 void BeamSearch::init(cytonMt::NetworkMt* model_, cytonMt::Vocabulary* vocab_,
 		int beamSize_, int maxSeqLen_, Precision lenPenalty_,
-		vector<int>& hiddenSize, int numLayers)
+		int embedSize, vector<int>& hiddenSize, int numLayers)
 {
 	model=model_;
 	vocab=vocab_;
@@ -53,7 +53,7 @@ void BeamSearch::init(cytonMt::NetworkMt* model_, cytonMt::Vocabulary* vocab_,
 	maxSeqLen1=maxSeqLen_+1;
 	lenPenalty=lenPenalty_;
 
-	initModelState.init(hiddenSize.at(0), numLayers);
+	initModelState.init(embedSize, hiddenSize.at(0), numLayers);
 	initStackState.set(NULL, &initModelState, vocab->sos, vocab->empty, 0, 0);
 
 	stack.init(maxSeqLen1, beamSize);
@@ -64,7 +64,7 @@ void BeamSearch::init(cytonMt::NetworkMt* model_, cytonMt::Vocabulary* vocab_,
 	for(vector<ModelState>::iterator it=modelStateFactory.vec.begin();
 			it!=modelStateFactory.vec.end(); it++)
 	{
-		it->init(hiddenSize.at(0), numLayers);
+		it->init(embedSize, hiddenSize.at(0), numLayers);
 	}
 
 	stackStateFactory.init(maxNumStates);

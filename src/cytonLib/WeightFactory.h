@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ class WeightFactory
 {
 public:
 	vector<Weight*> weights;
+	vector<std::pair<Weight*, Weight*>> shareWeights;
+
 	Weight whole;
 	bool optSgd;
 	DevMatPrec dWeight;
@@ -45,7 +47,7 @@ public:
 
 	void init(const string& method);
 
-	void create(Weight& weight, string tag, int ni, int nj);
+	void create(Weight& weight, string tag, int ni, int nj, Weight* share=NULL);
 
 	void alloc(Precision clipGradient);
 

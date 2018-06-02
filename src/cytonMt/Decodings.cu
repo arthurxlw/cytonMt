@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,21 +23,21 @@ namespace cytonMt
 
 void Decodings::init(Variable* hsSeq, Variable* hEncoder, Variable* cEncoder,
 		DevMatInt* wordsTrg, HostMatInt* hWordsTrg,
-		int vocabSize, int hiddenSize, int numLayers_, Vocabulary* vocab)
+		int vocabSize, int embedSize, int hiddenSize, int numLayers_,
+		Vocabulary* vocab, Weight* embedW)
 {
 	this->hsSeq=hsSeq;
 	this->wordsTrg=wordsTrg;
 	this->vocab=vocab;
 
-	int embeddingSize=hiddenSize;
 	string tag="decodings";
 	Variable* tx=embedding.init("targetEmbedding", wordsTrg, hWordsTrg,
-			vocabSize, embeddingSize);
+			vocabSize, embedSize, embedW);
 	embeddingY=tx;
 
 	Precision tDropout=params.dropout;
 	XLLib::printfln(params.os,tag+".dropRt=%f", tDropout);
-	int lstmInputSize=hiddenSize+embeddingSize;
+	int lstmInputSize=embedSize+embedSize;
 	cell.lstmCell.init(tag+".lstmCell", batchSize, lstmInputSize, hiddenSize, numLayers_, 1,
 			tDropout, hEncoder, cEncoder );
 
@@ -47,18 +47,18 @@ void Decodings::init(Variable* hsSeq, Variable* hEncoder, Variable* cEncoder,
 
 	tx=new Variable();
 	tx->resize(batchSize, hiddenSize*2, 1, 1 );
-	cell.linCellHaHt.init(tag+".linCellHaHt", tx, hiddenSize,false);
+	cell.linCellHaHt.init(tag+".linCellHaHt", tx, embedSize,false);
 
 	tx=new Variable();
-	tx->resize(batchSize, hiddenSize, 1, 1);
+	tx->resize(batchSize, embedSize, 1, 1);
 	cell.linCellOut.init(XLLib::stringFormat("%s.linCellOut", tag.c_str()),
-			tx, vocabSize, true);
+			tx, vocabSize, true, 1, NULL, &(embedding.cell->w));
 
 	for(int i=0;i<decodings.size();i++)
 	{
 		Variable* trgEmbedding=&trgEmbeddings[i];
-		int tOffset=embeddingSize*batchSize*i;
-		trgEmbedding->set(batchSize, embeddingSize, 1, 1, embeddingY->data+tOffset, embeddingY->grad.data+tOffset);
+		int tOffset=embedSize*batchSize*i;
+		trgEmbedding->set(batchSize, embedSize, 1, 1, embeddingY->data+tOffset, embeddingY->grad.data+tOffset);
 		Decoding* prev=i==0?NULL:&decodings[i-1];
 		decodings[i].init(i, cell, trgEmbedding, hsSeq, prev, hiddenSize);
 	}

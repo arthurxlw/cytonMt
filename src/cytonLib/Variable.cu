@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -271,6 +271,18 @@ string Variable::toStringDim()
 	ostringstream os;
 	os<<XLLib::stringFormat("%d*%d*%d*%d", n, c, h, w);
 	return os.str();
+}
+
+
+string Variable::toString()
+{
+	ostringstream os;
+	os<<this->toStringDim()<<" ";
+
+	os<<((DevMatPrec*)this)->toString();
+
+	return os.str();
+
 }
 
 } /* namespace cytonVR */

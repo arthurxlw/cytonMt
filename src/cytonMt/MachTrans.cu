@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ bool MachTrans::checkTrainStatus(bool tune)
 	double likeli=sumTrainLikeli/nTrgWords;
 
 	XLLib::printf(" s%.1e %s %0.0fw/s, lr:%.2e tr:%.3e",
-			(double)nSents, checkTime().c_str(), nSrcWords/timeCost, lambda, likeli);
+			(double)nSents, checkTime().c_str(), nSrcWordsRaw/timeCost, lambda, likeli);
 
 	XLLib::printf(" bestV:%.6f %.6f", likeliValidBest0, likeliValidBest1);
 	Precision likeliValid=test(validCorpora);
@@ -124,7 +124,7 @@ bool MachTrans::checkTrainStatus(bool tune)
 
 		lastCheckTime=XLLib::startTime();
 		sumTrainLikeli=0;
-		nSrcWords=0;
+		nSrcWordsRaw=0;
 		nTrgWords=0;
 	}
 	XLLib::printfln("");
@@ -148,7 +148,7 @@ void MachTrans::learn(CorpusReader& corpus, bool updateParams)
 		bool tune=true;
 		probe=nSents-lastProbe>=probePeriod;
 
-		if(!probe && epoch==params.epochStart && nPrintDetails<=3 && nSents-lastProbe >=batchSize*50*nPrintDetails)
+		if(!probe && epoch==params.epochStart && nPrintDetails<=1 && nSents-lastProbe >=batchSize*50*nPrintDetails)
 		{
 			nPrintDetails+=1;
 			probe=true;
@@ -169,11 +169,11 @@ void MachTrans::learn(CorpusReader& corpus, bool updateParams)
 		global.batch+=1;
 		batch.setSrcTrg(node->srcMat, node->trgMat, node->factor);
 
-		double tLikeli=train(lambda, updateParams);
+		double tLikeli=train(lambda , updateParams);
 
 		sumTrainLikeli+=tLikeli;
 		nSents+=batchSize*node->factor;
-		nSrcWords+=batch.hSrcMat.length()*node->factor;
+		nSrcWordsRaw+=batch.hSrcMat.length();
 		nTrgWords+=batch.numTrgWords()*node->factor;
 	}
 
@@ -317,8 +317,17 @@ void MachTrans::workTrain()
 	{
 		vector<string> ts;
 		XLLib::str2list(params.trainData,":", ts);
-		assert(ts.size()==2);
-		trainCorpus.init(ts.at(0), ts.at(1), srcVocab, trgVocab,  params.ignoreUnk, batchSize, params.maxSeqLen);
+//		assert(ts.size()==2);
+		for(int i=0; i<ts.size(); i+=3)
+		{
+			double factor=1.0;
+			if(i+2<ts.size())
+			{
+				factor=atof(ts.at(i+2).c_str());
+			}
+			trainCorpus.init(ts.at(i), ts.at(i+1), srcVocab, trgVocab,
+				params.ignoreUnk, batchSize, params.maxSeqLen, factor);
+		}
 	}
 
 	{
@@ -348,7 +357,7 @@ void MachTrans::workTrain()
 	numFails=0;
 	global.batch=0;
 	nSents=0;
-	nSrcWords=0;
+	nSrcWordsRaw=0;
 	nTrgWords=0;
 
 	lastProbe=0;
@@ -384,7 +393,7 @@ void MachTrans::workTest()
 
 	BeamSearch beamSearch;
 	beamSearch.init(this, &trgVocab, params.beamSize, params.maxSeqLen, params.lenPenalty,
-				params.hiddenSize, params.numLayers);
+				params.embedSize, params.hiddenSize, params.numLayers);
 
 	MonolingReader corpus;
 	corpus.init(params.testInput, &srcVocab);

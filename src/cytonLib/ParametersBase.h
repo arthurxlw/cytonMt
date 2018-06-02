@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ protected:
 			}
 			opt2val[tName] = option.value;
 			//opts.push_back(tName);
-			os<<tName<<"\t"<<option.help<<" ("<<option.value<<")"<<"\n";
+			os<<"  "<<tName<<"\t"<<option.help<<" ("<<option.value<<")"<<"\n";
 		}
 		helps=helps+os.str();
 	}

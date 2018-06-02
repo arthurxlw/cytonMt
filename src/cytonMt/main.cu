@@ -1,5 +1,5 @@
 /*
-Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@gmail.com)
+Copyright 2018 XIAOLIN WANG (xiaolin.wang@nict.go.jp; arthur.xlw@google.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ limitations under the License.
 #include "ParamsMt.h"
 #include "MachTrans.h"
 #include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-const char* version="2018-0210-0910";
+const char* version="2018-0528";
 
 using namespace cytonMt;
 using namespace cytonLib;
