@@ -8,7 +8,7 @@ Xiaolin Wang (xiaolin.wang@nict.go.jp, arthur.xlw@gmail.com)
 
 To start using the toolkit 
 
-(Note that you can run bash compile_train_translate.sh)
+(Note that you can run the script of runMe.sh)
 
 1) compiling the toolkit;
 
@@ -65,42 +65,79 @@ If you are using our toolkit, please kindly cite our paper:
 The parameters of CytonMT
 
 bin/cytonMt --help
-			version: 2018-0528
+
+	version: 2018-0528
+
   --help	 ()
+
   --mode	train/translate ()
+
   --saveModel	 ()
+
   --loadModel	load model for continue training or translate ()
+
   --maxSaveModels	maximum number of saved models (10)
+
   --train	source-side and target-side training files, one sentences per line. trainSrc:trainTrg[:weight:trainSrc2:trainSrc2:weight2] (trainSrc:trainTrg)
+
   --dev	source-side and target-side development files, one sentences per line (devSrc:devTrg)
+
   --testInput	input file for translating (testInput)
+
   --testOutput	output file for translating (testOutput)
+
   --vocab	source-side and target-side vocabulary files, one word per line (vocabSrc:vocabTrg)
+
   --srcTrgShareEmbed	share the embedding weight between the source side and the target side (1)
+
   --srcVocabSize	size of source-side vocabulary, 0 means using whole vocabulary in vocabSrc file (0)
+
   --trgVocabSize	size of source-side vocabulary, 0 means using whole vocabulary in vocabTrg file (0)
+
   --ignoreUnk	0/1, 1 means ignoring unknown words (1)
+
   --initParam	initialize weights uniformly in (-initParam, initParam) (0.1)
+
   --optimization	SGD/Adam (SGD)
+
   --learningRate	learning rate (1)
+
   --decayRate	decay factor of learning rate (0.7)
+
   --decayStart	learning rate start to decay from the epoch of decayStart (1000)
+
   --decayConti	0/1, 1 means that learning rate keeps decaying per check once it decays, OpenNMT's mode,   (0)
+
   --decayStatus	0/1, 1 means that learning rate is in a status of decaying, useful for continue training. (0)
+
   --epochs	max epochs of training (100)
+
   --epochStart	the number of first epoch, useful for continue training (1)
+
   --batchSize	batch size (64)
+
   --maxSeqLen	max length of source and target sentence (100)
+
   --embedSize	size of word embedding (512)
+
   --hiddenSize	size of hidden states (512)
+
   --numLayers	number of encoder/decoder layers (2)
+
   --dropout	dropout rate, 0 means disabling dropout (0.2)
+
   --clipGradient	threshold for clip gradient (5)
+
   --labelSmooth	factor of smoothing the target labels (0.1)
+
   --probeFreq	number of times probing the development likelihood per epoch (1)
+
   --probeMargin	margin for checking whether the development likelihood has increased (0.01)
+
   --patience	threshold for decaying the learning rate and restart training from the best model (1)
+
   --beamSize	size of beam search in translating (10)
+
   --lenPenalty	length penalty (0.6)
 
 
