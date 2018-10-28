@@ -4,7 +4,7 @@ CUFLAGS=--relocatable-device-code=true -arch=sm_30 -gencode=arch=compute_30,code
 
 FLAGS = -Isrc/cytonLib/ -I$(CUDA)/include -O3 -std=c++11 --compile $(CUFLAGS)  -x cu 
 
-LDFLAGS = --cudart static $(CUFLAGS) -link  -L$(CUDA)/lib -lcudnn -lcublas -lcurand
+LDFLAGS = --cudart static $(CUFLAGS) -link  -L$(CUDA)/lib64 -lcudnn -lcublas -lcurand
 
 print-%  : ; @echo $* = $($*)
 
